@@ -47,7 +47,7 @@ class _signupState extends State<signup> {
           left: Get.width * 0.4,
           top: 80, // Set to 40 or any value based on your design
           child: Text(
-            'Hello 👋',
+            'Hello 👋👋',
             style: TextStyle(
                 fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
           ),
