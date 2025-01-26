@@ -9,7 +9,7 @@ import 'package:first_project/pages/homepage.dart';
 //import 'package:first_project/pages/animated_search.dart';
 import 'package:first_project/pages/signup.dart';
 // import 'package:first_project/pages/signin.dart';
-// import 'package:first_project/pages/user_profile.dart';
+
 import 'package:get/get.dart';
 void main(){
    runApp(Traveler());
