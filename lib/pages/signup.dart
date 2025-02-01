@@ -47,7 +47,7 @@ class _signupState extends State<signup> {
           left: Get.width * 0.4,
           top: 80, // Set to 40 or any value based on your design
           child: Text(
-            'Hello 👋👋',
+            'Hello 👋',
             style: TextStyle(
                 fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -196,8 +196,8 @@ class _signupState extends State<signup> {
                         });
                       } else {
                         Auth authenticator = Get.put(Auth());
-                        final uri = Uri.https(
-                            'api.tripstins.com','/api/v1/register');
+                        final uri =
+                            Uri.https('api.tripstins.com', '/api/v1/register');
                         final headers = {
                           'Content-Type': 'application/json',
                           'Accept': 'application/json',
@@ -227,7 +227,6 @@ class _signupState extends State<signup> {
                                 authenticator.login();
                                 state.index = 0;
                               });
-                              
                             }
                           } else {
                             print(
@@ -332,7 +331,6 @@ class _signupState extends State<signup> {
     );
   }
 }
-
 
 // import http.client
 
