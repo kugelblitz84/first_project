@@ -10,8 +10,30 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:math';
 
-class homepage extends StatelessWidget{
+class homepage extends StatelessWidget {
   final Auth authenticator = Get.put(Auth());
+  List<Widget> lst = [
+    CategoryTile(
+      title: 'Sajek',
+      imageUrl:
+          'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    ),
+    CategoryTile(
+      title: 'Cox\'s Bazar',
+      imageUrl:
+          'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    ),
+    CategoryTile(
+      title: 'Tanguar Haor',
+      imageUrl:
+          'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    ),
+    CategoryTile(
+      title: 'Sundar Ban',
+      imageUrl:
+          'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    ),
+  ];
   @override
   homepage({super.key});
 
@@ -41,17 +63,16 @@ class homepage extends StatelessWidget{
                 leading: Icon(Icons.logout),
                 title: Text("Log Out"),
                 onTap: () {
-                  
-                    final state =
-                        context.findAncestorStateOfType<mainpageState>();
-                    if (state != null) {
-                      state.setState(() {
-                        authenticator.logout();
-                        //state.initState();
-                        state.index = 0;
-                      });
-                    }
-                  
+                  final state =
+                      context.findAncestorStateOfType<mainpageState>();
+                  if (state != null) {
+                    state.setState(() {
+                      authenticator.logout();
+                      //state.initState();
+                      state.index = 0;
+                    });
+                  }
+
                   //Get.offNamed('/');
                 },
               )
@@ -59,21 +80,20 @@ class homepage extends StatelessWidget{
         ),
       ),
       appBar: AppBar(
-        title: Text(
-          "Logo",
-          style: TextStyle(
-            color: Colors.blue,
-            fontWeight: FontWeight.w900,
+          title: Text(
+            "Logo",
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.w900,
+            ),
           ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: (){
-              showSearch(context: context, delegate: searchdelegate());
-            },
-            icon: Icon(Icons.search))
-        ]
-      ),
+          actions: <Widget>[
+            IconButton(
+                onPressed: () {
+                  showSearch(context: context, delegate: searchdelegate());
+                },
+                icon: Icon(Icons.search))
+          ]),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -105,30 +125,18 @@ class homepage extends StatelessWidget{
             // Category Section
             Padding(
               padding: EdgeInsets.all(2.0),
-              child: Row(
-                //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  CategoryTile(
-                    title: 'Sajek',
-                    imageUrl:
-                        'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                  ),
-                  CategoryTile(
-                    title: 'Cox\'s Bazar',
-                    imageUrl:
-                        'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                  ),
-                  CategoryTile(
-                    title: 'Tanguar Haor',
-                    imageUrl:
-                        'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                  ),
-                  CategoryTile(
-                    title: 'Sundar Ban',
-                    imageUrl:
-                        'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                  ),
-                ],
+              child: SizedBox(
+                height: 80,
+                width: double.infinity,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  physics: PageScrollPhysics(),
+                  controller: PageController(viewportFraction: 0.51),
+                  itemCount: lst.length,
+                  itemBuilder: (context, iter) {
+                    return lst[iter];
+                  },
+                ),
               ),
             ),
             SizedBox(height: 10),
@@ -164,7 +172,7 @@ class homepage extends StatelessWidget{
                                   ],
                                 ),
                               ))),
-    
+
                       //VerticalDivider(thickness: 0.1, color: Colors.grey[800],),
                       Expanded(
                           child: InkWell(
@@ -194,7 +202,6 @@ class homepage extends StatelessWidget{
             ),
             SizedBox(height: 50),
             Row(
-              
               //crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(width: 10),
@@ -229,28 +236,18 @@ class homepage extends StatelessWidget{
               ],
             ),
             SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                
-                CategoryTile(
-                  title: 'Sajek',
-                  imageUrl:
-                      'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                ),
-                
-                CategoryTile(
-                  title: 'Cox\'s Bazar',
-                  imageUrl:
-                      'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                ),
-                
-                CategoryTile(
-                  title: 'Tanguar Haor',
-                  imageUrl:
-                      'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                ),
-              ],
+            SizedBox(
+              height: 80,
+              width: double.infinity,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                physics: PageScrollPhysics(),
+                controller: PageController(viewportFraction: 0.51),
+                itemCount: lst.length,
+                itemBuilder: (context, iter) {
+                  return lst[iter];
+                },
+              ),
             ),
             SizedBox(height: 20),
             Center(
@@ -294,8 +291,8 @@ class homepage extends StatelessWidget{
                 ),
                 Spacer(),
                 Container(
-                  height: 22, 
-                  width: 70, 
+                  height: 22,
+                  width: 70,
                   decoration: BoxDecoration(
                       //color: Colors.black,
                       borderRadius: BorderRadius.circular(5),
@@ -320,18 +317,18 @@ class homepage extends StatelessWidget{
             ),
             SizedBox(
               height: 200,
-              width: double.infinity, 
+              width: double.infinity,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 physics: PageScrollPhysics(),
-                controller: PageController(viewportFraction: 0.51), 
-                itemCount: 5, 
-                itemBuilder: (context,iter){
+                controller: PageController(viewportFraction: 0.51),
+                itemCount: 5,
+                itemBuilder: (context, iter) {
                   return GuideTiles();
                 },
               ),
             ),
-    
+
             SizedBox(height: 10),
             // Destinations and Travel Blog Sections
             Center(
@@ -353,7 +350,7 @@ class homepage extends StatelessWidget{
                     style: TextStyle(
                       fontSize: 15,
                       //fontStyle: FontStyle.italic,
-                      color: Colors.white,  
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -384,8 +381,7 @@ class CategoryTile extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
         ),
-        child: Stack(
-          children: [
+        child: Stack(children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.network(imageUrl,
@@ -463,22 +459,18 @@ class FooterColumn extends StatelessWidget {
   }
 }
 
-
 class searchdelegate extends SearchDelegate<String> {
-
-
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
-      // Mic icon 
-      IconButton(onPressed: (){}, icon: Icon(Icons.mic)),
+      // Mic icon
+      IconButton(onPressed: () {}, icon: Icon(Icons.mic)),
       // Clear query button
       IconButton(
         icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
-        
       ),
       //IconButton(onPressed: (){},icon: Icon(Icons.man))
     ];
@@ -499,7 +491,8 @@ class searchdelegate extends SearchDelegate<String> {
     // Implement your search results display
     return ListView(
       children: [
-        Text('Showing Search Results For: $query',style: TextStyle(color: Colors.black)),
+        Text('Showing Search Results For: $query',
+            style: TextStyle(color: Colors.black)),
         // Add search result items
       ],
     );
@@ -578,7 +571,6 @@ class searchdelegate extends SearchDelegate<String> {
     );
   }
 }
-
 
 class GuideTiles extends StatelessWidget {
   const GuideTiles({super.key});
