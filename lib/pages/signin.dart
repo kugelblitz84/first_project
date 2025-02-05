@@ -10,6 +10,8 @@ import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class signin extends StatefulWidget {
   @override
@@ -76,6 +78,11 @@ class _signinState extends State<signin> {
                     children: [
                       TextField(
                         controller: _mailCont,
+                        onChanged: (value) {
+                          setState(() {
+                            _err_msg_mail = '';
+                          });
+                        },
                         decoration: InputDecoration(
                             labelText: 'Email',
                             hintText: 'example@gmail.com',
@@ -104,8 +111,21 @@ class _signinState extends State<signin> {
                         height: 20,
                       ),
                       TextField(
-                        controller: _mailCont,
+                        obscureText: _obscure,
+                        onChanged: (value) {
+                          setState(() {
+                            _err_msg_pass = '';
+                          });
+                        },
+                        controller: _passCont,
                         decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _obscure = !_obscure;
+                                  });
+                                },
+                                icon: Icon(Icons.visibility_off)),
                             labelText: 'Password',
                             hintText: 'At least 8 Characters',
                             hintStyle: TextStyle(
@@ -132,36 +152,6 @@ class _signinState extends State<signin> {
                       SizedBox(
                         height: 20,
                       ),
-                      SizedBox(
-                        width: Get.width * 0.9,
-                        //height: 40,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                splashFactory: InkRipple.splashFactory,
-                                overlayColor: Colors.black,
-                                backgroundColor:
-                                    const Color.fromARGB(118, 0, 0, 0)),
-                            onPressed: () {
-                              if (_mailCont.text.isEmpty) {
-                                setState(() {
-                                  _err_msg_mail = 'Email cannot be emty';
-                                });
-                              } else if (_passCont.text.isEmpty) {
-                                setState(() {
-                                  _err_msg_pass = 'Please provide a password';
-                                });
-                              } else {
-                                // login process here
-                              }
-                            },
-                            child: Text(
-                              'Log in',
-                              style: TextStyle(color: Colors.white),
-                            )),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
                       Align(
                           alignment: Alignment.bottomLeft,
                           child: GestureDetector(
@@ -173,6 +163,99 @@ class _signinState extends State<signin> {
                                     color: const Color.fromARGB(
                                         255, 255, 223, 223)),
                               ))),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        width: Get.width * 0.9,
+                        //height: 40,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                splashFactory: InkRipple.splashFactory,
+                                overlayColor: Colors.black,
+                                backgroundColor:
+                                    const Color.fromARGB(118, 0, 0, 0)),
+                            onPressed: () async {
+                              if (_mailCont.text.isEmpty) {
+                                setState(() {
+                                  _err_msg_mail = 'Email cannot be emty';
+                                });
+                              } else if (_passCont.text.isEmpty) {
+                                setState(() {
+                                  _err_msg_pass = 'Please provide a password';
+                                });
+                              } else {
+                                // login process here
+                                Auth authenticator = Get.put(Auth());
+                                final uri = Uri.https(
+                                    'api.tripstins.com', '/api/v1/login');
+                                final headers = {
+                                  'Content-Type': 'application/json',
+                                  'Accept': 'application/json',
+                                  //'Authorization': 'Bearer 123',
+                                };
+
+                                final body = jsonEncode({
+                                  "email": _mailCont.text,
+                                  "password": _passCont.text,
+                                  //"type": "user"
+                                });
+
+                                try {
+                                  final response = await http.post(uri,
+                                      headers: headers, body: body);
+
+                                  if (response.statusCode == 200) {
+                                    print('Success: ${response.body}');
+                                    authenticator.login(context);
+                                    final map = jsonDecode(response.body);
+                                    authenticator.store_teken(map['token']);
+                                  } else if (response.statusCode == 401) {
+                                    setState(() {
+                                      _err_msg_pass =
+                                          'Mail and Password does not match';
+                                    });
+                                  } else {
+                                    print(
+                                        'Failed: ${response.statusCode} - ${response.body}');
+                                  }
+                                } catch (e) {
+                                  print('Error: $e');
+                                }
+                              }
+                            },
+                            child: Text(
+                              'Log in',
+                              style: TextStyle(color: Colors.white),
+                            )),
+                      ),
+                      Row(children: [
+                        Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Text(
+                              ' Create an account',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color:
+                                      const Color.fromARGB(255, 255, 223, 223)),
+                            )),
+                        GestureDetector(
+                            onTap: () {
+                              final state = context
+                                  .findAncestorStateOfType<mainpageState>();
+                              if (state != null) {
+                                state.setState(() {
+                                  state.sinup = true;
+                                });
+                              }
+                            },
+                            child: Text(
+                              'Sign up',
+                              style: TextStyle(
+                                  color: Colors.cyan,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                      ])
                     ],
                   ),
                 )),

@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'dart:math';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class homepage extends StatelessWidget {
   final Auth authenticator = Get.put(Auth());
@@ -62,16 +64,28 @@ class homepage extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text("Log Out"),
-                onTap: () {
-                  final state =
-                      context.findAncestorStateOfType<mainpageState>();
-                  if (state != null) {
-                    state.setState(() {
-                      authenticator.logout();
-                      //state.initState();
-                      state.index = 0;
-                    });
+                onTap: () async {
+                  String token = await authenticator.read_token();
+                  final uri = Uri.https('api.tripstins.com', '/api/v1/logout');
+                  final header = {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ${token}',
+                  };
+                  try {
+                    final response = await http.get(uri, headers: header);
+
+                    if (response.statusCode == 200) {
+                      print('Success: ${response.body}');
+                      authenticator.logout(context);
+                    } else if (response.statusCode == 400) {
+                      print(
+                          'Could not logout: token => ${token} \n ${response.body}');
+                    } else
+                      print('error 401 token => ${token}');
+                  } catch (e) {
+                    print('Error logging out: ${e}');
                   }
+                  //authenticator.logout(context);
 
                   //Get.offNamed('/');
                 },

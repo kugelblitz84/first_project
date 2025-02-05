@@ -15,13 +15,34 @@ class Auth extends GetxController {
     isLoggedIn = _storage.read('login_stat') ?? false;
   }
 
-  void login() {
+  void login(BuildContext context) {
     _storage.write('login_stat', true);
     isLoggedIn = true;
+    final state = context.findAncestorStateOfType<mainpageState>();
+    if (state != null) {
+      state.setState(() {
+        state.index = 0;
+      });
+    }
   }
 
-  void logout() {
+  void logout(BuildContext context) {
     _storage.write('login_stat', false);
     isLoggedIn = false;
+    final state = context.findAncestorStateOfType<mainpageState>();
+    if (state != null) {
+      state.setState(() {
+        state.index = 0;
+      });
+    }
+  }
+
+  Future<void> store_teken(String token) async {
+    await _secure_storage.write(key: 'auth_token', value: token);
+  }
+
+  Future<String> read_token() async {
+    String? ans = await _secure_storage.read(key: 'auth_token');
+    return ans == null ? '' : ans;
   }
 }

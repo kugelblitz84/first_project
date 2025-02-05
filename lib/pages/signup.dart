@@ -220,14 +220,7 @@ class _signupState extends State<signup> {
                           if (response.statusCode == 200 ||
                               response.statusCode == 201) {
                             print('Success: ${response.body}');
-                            final state = context
-                                .findAncestorStateOfType<mainpageState>();
-                            if (state != null) {
-                              state.setState(() {
-                                authenticator.login();
-                                state.index = 0;
-                              });
-                            }
+                            authenticator.login(context);
                           } else {
                             print(
                                 'Failed: ${response.statusCode} - ${response.body}');
