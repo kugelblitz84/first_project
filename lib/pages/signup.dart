@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 import 'dart:convert';
+import 'package:first_project/pages/custom_widgets/API_processes.dart';
 import 'package:first_project/pages/custom_widgets/autherntication_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:first_project/pages/MainPage.dart';
@@ -42,10 +43,9 @@ class _signupState extends State<signup> {
             ),
           ),
         ),
-        // Fixed "Hello" text and welcome message
         Positioned(
           left: Get.width * 0.4,
-          top: 80, // Set to 40 or any value based on your design
+          top: 80,
           child: Text(
             'Hello 👋',
             style: TextStyle(
@@ -54,7 +54,7 @@ class _signupState extends State<signup> {
         ),
         Positioned(
           left: Get.width * 0.25,
-          top: 120, // Slightly below the "Hello" text
+          top: 120,
           child: Text(
             'Welcome to the signup page',
             textAlign: TextAlign.center,
@@ -64,16 +64,14 @@ class _signupState extends State<signup> {
             ),
           ),
         ),
-        // Scrollable form content
         Positioned.fill(
-          top: Get.height * 0.2, // Start the form below the static header
+          top: Get.height * 0.2,
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  // Form content here
                   SizedBox(height: 20),
                   Container(
                     padding: EdgeInsets.all(16),
@@ -194,39 +192,38 @@ class _signupState extends State<signup> {
                         setState(() {
                           _error_empty_field = "All Fields Must Be Filled";
                         });
+                      } else if (_passCont.text.length < 8) {
+                        setState(() {
+                          _error_empty_field =
+                              'Use at least 8 character for password';
+                        });
                       } else {
                         Auth authenticator = Get.put(Auth());
-                        final uri =
-                            Uri.https('api.tripstins.com', '/api/v1/register');
-                        final headers = {
-                          'Content-Type': 'application/json',
-                          'Accept': 'application/json',
-                          //'Authorization': 'Bearer 123',
-                        };
-
-                        final body = jsonEncode({
-                          "name": _nameCont.text,
-                          "username": _usernameCont.text,
-                          "email": _emailCont.text,
-                          "phone": _phoneCont.text,
-                          "password": _passCont.text,
-                          "type": "user"
-                        });
-
-                        try {
-                          final response = await http.post(uri,
-                              headers: headers, body: body);
-
-                          if (response.statusCode == 200 ||
-                              response.statusCode == 201) {
-                            print('Success: ${response.body}');
+                        final stat = await api_processes.api_signup(
+                            _nameCont.text,
+                            _usernameCont.text,
+                            _emailCont.text,
+                            _passCont.text,
+                            _phoneCont.text);
+                        print('the register process returned code : ${stat}');
+                        switch (stat) {
+                          case 200 || 201:
+                            final Auth authenticator = Get.put(Auth());
+                            final int stat_log = await api_processes.api_login(
+                                _emailCont.text, _passCont.text);
                             authenticator.login(context);
-                          } else {
-                            print(
-                                'Failed: ${response.statusCode} - ${response.body}');
-                          }
-                        } catch (e) {
-                          print('Error: $e');
+                            break;
+                          case 422:
+                            setState(() {
+                              _error_empty_field =
+                                  'Email and/or Phone already in use';
+                            });
+                            break;
+                          default:
+                            setState(() {
+                              _error_empty_field =
+                                  'An unexpected error occurred';
+                            });
                         }
                       }
                     },
@@ -240,7 +237,7 @@ class _signupState extends State<signup> {
                   SizedBox(height: 10),
                   Text(
                     _error_empty_field,
-                    style: TextStyle(color: Colors.red, fontSize: 11),
+                    style: TextStyle(color: Colors.red, fontSize: 15),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

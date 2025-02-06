@@ -19,11 +19,13 @@ class mainpage extends StatefulWidget {
 class mainpageState extends State<mainpage> {
   late bool sinup = false;
   late int index;
+  late bool isloading;
   @override
   void initState() {
     super.initState();
     index = 0;
     sinup = false;
+    isloading = false;
   }
 
   // List<Widget> _pages = [

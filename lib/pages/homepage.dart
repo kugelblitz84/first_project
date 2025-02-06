@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, dead_code, non_constant_identifier_names, prefer_const_declarations, sort_child_properties_last
 //import 'dart:ffi';
 
+import 'package:first_project/pages/custom_widgets/API_processes.dart';
 import 'package:first_project/pages/signin.dart';
 import 'package:first_project/pages/signup.dart';
 import 'package:first_project/pages/MainPage.dart';
@@ -13,7 +14,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class homepage extends StatelessWidget {
-  final Auth authenticator = Get.put(Auth());
   List<Widget> lst = [
     CategoryTile(
       title: 'Sajek',
@@ -65,29 +65,9 @@ class homepage extends StatelessWidget {
                 leading: Icon(Icons.logout),
                 title: Text("Log Out"),
                 onTap: () async {
-                  String token = await authenticator.read_token();
-                  final uri = Uri.https('api.tripstins.com', '/api/v1/logout');
-                  final header = {
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer ${token}',
-                  };
-                  try {
-                    final response = await http.get(uri, headers: header);
-
-                    if (response.statusCode == 200) {
-                      print('Success: ${response.body}');
-                      authenticator.logout(context);
-                    } else if (response.statusCode == 400) {
-                      print(
-                          'Could not logout: token => ${token} \n ${response.body}');
-                    } else
-                      print('error 401 token => ${token}');
-                  } catch (e) {
-                    print('Error logging out: ${e}');
-                  }
-                  //authenticator.logout(context);
-
-                  //Get.offNamed('/');
+                  final Auth authenticator = Get.put(Auth());
+                  final String token = await authenticator.read_token();
+                  api_processes.api_logout(token);
                 },
               )
           ],

@@ -2,16 +2,15 @@
 
 import 'dart:ui';
 import 'package:first_project/pages/MainPage.dart';
-import 'package:first_project/pages/custom_widgets/autherntication_login.dart';
 import 'package:first_project/pages/homepage.dart';
+import 'package:first_project/pages/custom_widgets/autherntication_login.dart';
 import 'package:first_project/pages/signup.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:first_project/pages/custom_widgets/API_processes.dart';
 
 class signin extends StatefulWidget {
   @override
@@ -19,11 +18,10 @@ class signin extends StatefulWidget {
 }
 
 class _signinState extends State<signin> {
-  Auth authenticator = Get.put(Auth());
   final TextEditingController _mailCont = TextEditingController();
   final TextEditingController _passCont = TextEditingController();
   var _obscure = true;
-  String _err_msg_mail = '', _err_msg_pass = '';
+  String _err_msg_mail = '', _err_msg_pass = '', _button_text = 'Log in';
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -172,7 +170,8 @@ class _signinState extends State<signin> {
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 splashFactory: InkRipple.splashFactory,
-                                overlayColor: Colors.black,
+                                overlayColor:
+                                    const Color.fromARGB(255, 255, 255, 255),
                                 backgroundColor:
                                     const Color.fromARGB(118, 0, 0, 0)),
                             onPressed: () async {
@@ -186,46 +185,49 @@ class _signinState extends State<signin> {
                                 });
                               } else {
                                 // login process here
-                                Auth authenticator = Get.put(Auth());
-                                final uri = Uri.https(
-                                    'api.tripstins.com', '/api/v1/login');
-                                final headers = {
-                                  'Content-Type': 'application/json',
-                                  'Accept': 'application/json',
-                                  //'Authorization': 'Bearer 123',
-                                };
-
-                                final body = jsonEncode({
-                                  "email": _mailCont.text,
-                                  "password": _passCont.text,
-                                  //"type": "user"
-                                });
+                                //final int stat = await api_processes.api_login('api.tripstins.com', '/api/v1/login', _mailCont.text, _passCont.text);
 
                                 try {
-                                  final response = await http.post(uri,
-                                      headers: headers, body: body);
-
-                                  if (response.statusCode == 200) {
-                                    print('Success: ${response.body}');
-                                    authenticator.login(context);
-                                    final map = jsonDecode(response.body);
-                                    authenticator.store_teken(map['token']);
-                                  } else if (response.statusCode == 401) {
-                                    setState(() {
-                                      _err_msg_pass =
-                                          'Mail and Password does not match';
-                                    });
-                                  } else {
-                                    print(
-                                        'Failed: ${response.statusCode} - ${response.body}');
+                                  setState(() {
+                                    _button_text = 'Logging In...';
+                                  });
+                                  final int stat =
+                                      await api_processes.api_login(
+                                          _mailCont.text, _passCont.text);
+                                  switch (stat) {
+                                    case 200:
+                                      print('success');
+                                      final Auth authenticator =
+                                          Get.put(Auth());
+                                      authenticator.login(context);
+                                      break;
+                                    case 401:
+                                      setState(() {
+                                        _err_msg_pass = 'Invalid credentials';
+                                        _button_text = 'Log in';
+                                      });
+                                      break;
+                                    case 422:
+                                      print('Validation error: 422');
+                                      setState(() {
+                                        _err_msg_pass = 'Invalid input format';
+                                        _button_text = 'Log in';
+                                      });
+                                      break;
+                                    default:
+                                      setState(() {
+                                        _err_msg_pass =
+                                            'An unexpected error occurred';
+                                        _button_text = 'Log in';
+                                      });
                                   }
                                 } catch (e) {
-                                  print('Error: $e');
+                                  print('connection error ${e}');
                                 }
                               }
                             },
                             child: Text(
-                              'Log in',
+                              _button_text,
                               style: TextStyle(color: Colors.white),
                             )),
                       ),
@@ -267,19 +269,3 @@ class _signinState extends State<signin> {
     );
   }
 }
-
-// class CustomTextForPassword extends StatefulWidget {
-//   const CustomTextForPassword({super.key});
-
-//   @override
-//   State<CustomTextForPassword> createState() => _CustomTextForPasswordState();
-// }
-
-// class _CustomTextForPasswordState extends State<CustomTextForPassword> {
-//   var _obscure = true;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//   }
-// }
