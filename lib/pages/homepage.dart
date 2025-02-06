@@ -66,6 +66,7 @@ class homepage extends StatelessWidget {
                 title: Text("Log Out"),
                 onTap: () async {
                   final Auth authenticator = Get.put(Auth());
+                  authenticator.logout(context);
                   final String token = await authenticator.read_token();
                   api_processes.api_logout(token);
                 },
