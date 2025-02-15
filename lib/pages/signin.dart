@@ -10,6 +10,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:convert';
 import 'package:first_project/pages/custom_widgets/API_processes.dart';
 
 class signin extends StatefulWidget {
@@ -191,14 +192,18 @@ class _signinState extends State<signin> {
                                   setState(() {
                                     _button_text = 'Logging In...';
                                   });
-                                  final int stat =
-                                      await api_processes.api_login(
-                                          _mailCont.text, _passCont.text);
+                                  final res = await api_processes.api_login(
+                                      _mailCont.text, _passCont.text);
+                                  final stat = res.statusCode;
                                   switch (stat) {
                                     case 200:
                                       print('success');
                                       final Auth authenticator =
                                           Get.put(Auth());
+                                      final json = jsonDecode(res.body);
+                                      String token = json['token'];
+                                      authenticator.store_teken(token);
+                                      api_processes.api_set_user_data(token);
                                       authenticator.login(context);
                                       break;
                                     case 401:

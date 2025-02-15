@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:first_project/pages/custom_widgets/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:first_project/pages/custom_widgets/autherntication_login.dart';
@@ -6,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:first_project/pages/custom_widgets/autherntication_login.dart';
 
 class api_processes {
-  static Future<int> api_login(String mail, String pass) async {
+  static Future<dynamic> api_login(String mail, String pass) async {
     final uri = Uri.https('api.tripstins.com', '/api/v1/login');
     final headers = {
       'Content-Type': 'application/json',
@@ -20,10 +21,30 @@ class api_processes {
 
     try {
       final response = await http.post(uri, headers: headers, body: body);
-      return response.statusCode;
+      return response;
     } catch (e) {
       print('Error: $e');
       return -1;
+    }
+  }
+
+  static Future<void> api_set_user_data(String token) async {
+    final uri = Uri.https('api.tripstins.com', '/api/v1/user');
+    final header = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${token}',
+    };
+
+    try {
+      final response = await http.get(uri, headers: header);
+      if (response.statusCode == 200) {
+        print('setting user data');
+        user_data.set_user_data(jsonDecode(response.body));
+      } else {
+        print('Authentication Error');
+      }
+    } catch (e) {
+      print('error while setting user data : ${e}');
     }
   }
 
@@ -73,7 +94,7 @@ class api_processes {
       } else {
         print('Failed: ${response.statusCode} - ${response.body}');
       }
-      return response.statusCode;
+      return response;
     } catch (e) {
       print('Error: $e');
       return -1;

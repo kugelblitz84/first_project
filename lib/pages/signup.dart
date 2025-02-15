@@ -199,19 +199,23 @@ class _signupState extends State<signup> {
                         });
                       } else {
                         Auth authenticator = Get.put(Auth());
-                        final stat = await api_processes.api_signup(
+                        final res = await api_processes.api_signup(
                             _nameCont.text,
                             _usernameCont.text,
                             _emailCont.text,
                             _passCont.text,
                             _phoneCont.text);
+                        final stat = res.statusCode;
+                        final json = jsonDecode(res.body);
+                        final token = json['token'];
                         print('the register process returned code : ${stat}');
                         switch (stat) {
                           case 200 || 201:
                             final Auth authenticator = Get.put(Auth());
-                            final int stat_log = await api_processes.api_login(
+                            final stat_log = await api_processes.api_login(
                                 _emailCont.text, _passCont.text);
                             authenticator.login(context);
+                            authenticator.store_teken(token);
                             break;
                           case 422:
                             setState(() {

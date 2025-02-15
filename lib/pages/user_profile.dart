@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:first_project/pages/custom_widgets/user_data.dart';
 import 'package:get/get.dart';
 
 class user_profile extends StatefulWidget {
@@ -11,6 +12,7 @@ class user_profile extends StatefulWidget {
 }
 
 class _user_profileState extends State<user_profile> {
+  //String _name = user_data.name ?? '';
   final List<Widget> _user_vlogs = [
     AnimatedBlogCard(
       title: "How to visit Sajek valley in Rangamati",
@@ -70,8 +72,44 @@ class _user_profileState extends State<user_profile> {
                 ),
                 elevation: 5,
               ),
-              onPressed: () {},
-              child: const Row(
+              onPressed: () {
+                Get.defaultDialog(
+                  title: "",
+                  content: Stack(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(16),
+                        width: 300, // Adjust the size as needed
+                        height: 150,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("Custom GetX Dialog",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                            SizedBox(height: 10),
+                            Text("This is a pop-up with a close icon."),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: IconButton(
+                          icon: Icon(Icons.close, color: Colors.red),
+                          onPressed: () => Get.back(), // Close the dialog
+                        ),
+                      ),
+                    ],
+                  ),
+                  barrierDismissible: false, // Prevent accidental closing
+                );
+              },
+              child: Row(
                 children: [
                   CircleAvatar(
                     radius: 18,
@@ -80,7 +118,7 @@ class _user_profileState extends State<user_profile> {
                   ),
                   SizedBox(width: 5),
                   Text(
-                    'Sazzad',
+                    user_data.name ?? 'null',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -125,7 +163,7 @@ class _user_profileState extends State<user_profile> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        "Sazzad",
+                        user_data.username ?? 'null',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -133,7 +171,7 @@ class _user_profileState extends State<user_profile> {
                         ),
                       ),
                       Text(
-                        "@sazzad123",
+                        user_data.email ?? 'null',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey[200],

@@ -1,5 +1,27 @@
 class user_data {
-  late String name;
+  static late String? name,
+      email,
+      username,
+      phone,
+      email_verified_at,
+      created_at,
+      updated_at,
+      image,
+      about,
+      exp;
+  //late Map<String, dynamic> user_info;
+  static void set_user_data(Map<String, dynamic> json) {
+    Map<String, dynamic>? user = json['user'] as Map<String, dynamic>?,
+        info = json['user']['user_info'] as Map<String, dynamic>?;
+    print('info about the user : ${user}');
+    name = user?['name'];
+    email = user?['email'];
+    username = user?['username'];
+    phone = user?['phone'];
+    image = info?['image'];
+    about = info?['about'];
+    exp = info?['experience'];
+  }
 }
 
 // {
