@@ -9,7 +9,7 @@ import 'package:first_project/pages/custom_widgets/autherntication_login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -97,8 +97,9 @@ class homepage extends StatelessWidget {
             // Header Section
             Stack(
               children: [
-                Image.network(
-                  'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                CachedNetworkImage(
+                  imageUrl:
+                      'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                   height: Get.height * 0.2,
                   fit: BoxFit.cover,
                   width: double.infinity,
@@ -245,31 +246,46 @@ class homepage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
+
             Center(
               child: Container(
                 height: 40,
                 width: Get.width * 0.95,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                    fit: BoxFit.cover,
-                  ),
                 ),
-                child: Center(
-                  child: Text(
-                    '"If you never go, you will never know."',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      //fontStyle: FontStyle.italic,
-                      color: Colors.white,
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
                     ),
-                  ),
+                    Center(
+                      child: Text(
+                        '"If you never go, you will never know."',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+
             SizedBox(
               height: 50,
             ),
@@ -332,22 +348,35 @@ class homepage extends StatelessWidget {
                 width: Get.width * 0.95,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                    fit: BoxFit.cover,
-                  ),
                 ),
-                child: Center(
-                  child: Text(
-                    '"Travelling is a way of self healing"',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      //fontStyle: FontStyle.italic,
-                      color: Colors.white,
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
                     ),
-                  ),
+                    Center(
+                      child: Text(
+                        '"Travelling is a way of self healing"',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -379,8 +408,8 @@ class CategoryTile extends StatelessWidget {
         child: Stack(children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.network(imageUrl,
-                width: 90, height: 70, fit: BoxFit.cover),
+            child: CachedNetworkImage(
+                imageUrl: imageUrl, width: 90, height: 70, fit: BoxFit.cover),
           ),
           Positioned(
               bottom: 7,
@@ -601,14 +630,13 @@ class GuideTiles extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               child: Container(
-                height: 90,
-                width: 200,
-                child: Image(
-                  image: NetworkImage(
-                      'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  height: 90,
+                  width: 200,
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                    fit: BoxFit.cover,
+                  )),
             ),
             SizedBox(
               height: 4,

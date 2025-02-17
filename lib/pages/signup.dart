@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:first_project/pages/custom_widgets/API_processes.dart';
 import 'package:first_project/pages/custom_widgets/autherntication_login.dart';
 import 'package:http/http.dart' as http;
@@ -30,9 +31,11 @@ class _signupState extends State<signup> {
     return Stack(
       children: [
         Positioned.fill(
-          child: Image.network(
-            'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          child: CachedNetworkImage(
+            imageUrl:
+                'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             fit: BoxFit.cover,
+            placeholder: (context, url) => const CircleAvatar(),
           ),
         ),
         Positioned.fill(

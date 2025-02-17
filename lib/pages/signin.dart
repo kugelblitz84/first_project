@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import
 
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:first_project/pages/MainPage.dart';
 import 'package:first_project/pages/homepage.dart';
 import 'package:first_project/pages/custom_widgets/autherntication_login.dart';
@@ -29,8 +30,9 @@ class _signinState extends State<signin> {
       children: <Widget>[
         // Background image
         Positioned.fill(
-          child: Image.network(
-            'https://www.tripstins.com/assets/sunamganj-BKoa7yPz.webp',
+          child: CachedNetworkImage(
+            imageUrl:
+                'https://images.unsplash.com/photo-1539967430815-b3d193609067?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             fit: BoxFit.cover,
           ),
         ),
@@ -38,7 +40,7 @@ class _signinState extends State<signin> {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 7.0, sigmaY: 7.0),
             child: Container(
-              color: Colors.black.withAlpha(50),
+              color: Colors.black.withAlpha(150),
             ),
           ),
         ),
