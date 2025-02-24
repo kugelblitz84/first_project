@@ -7,6 +7,26 @@ import 'package:get/get.dart';
 import 'package:first_project/pages/custom_widgets/autherntication_login.dart';
 
 class api_processes {
+  static Future<void> api_load_vlogs(String token) async {
+    final uri = Uri.https('api.tripstins.com', '/api/v1/articles');
+    final header = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${token}',
+    };
+    try {
+      final response = await http.get(uri, headers: header);
+      if (response.statusCode == 200) {
+        print('setting vlogs data');
+        final res = jsonDecode(response.body);
+        user_data.set_user_vlogs(res);
+      } else {
+        print('Authentication Error');
+      }
+    } catch (e) {
+      print('error while setting vlog data : ${e}');
+    }
+  }
+
   static Future<dynamic> api_login(String mail, String pass) async {
     final uri = Uri.https('api.tripstins.com', '/api/v1/login');
     final headers = {

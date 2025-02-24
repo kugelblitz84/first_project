@@ -13,6 +13,7 @@ class user_profile extends StatefulWidget {
 
 class _user_profileState extends State<user_profile> {
   //String _name = user_data.name ?? '';
+
   final List<Widget> _user_vlogs = [
     AnimatedBlogCard(
       title: "How to visit Sajek valley in Rangamati",

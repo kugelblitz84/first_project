@@ -25,7 +25,7 @@ class Auth extends GetxController {
       });
     }
   }
-
+  
   void logout(BuildContext context) {
     _storage.write('login_stat', false);
     isLoggedIn = false;

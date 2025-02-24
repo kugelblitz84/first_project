@@ -10,6 +10,12 @@ class user_data {
       about,
       exp;
   //late Map<String, dynamic> user_info;
+  static void set_user_vlogs(Map<String, dynamic> json) {
+    final List<dynamic> data = json['data'];
+    print(
+        'user Vlogs data recieved: ${data},\nid: ${data[0]['id']}\n responce recieved: ${json}');
+  }
+
   static void set_user_data(Map<String, dynamic> json) {
     Map<String, dynamic>? user = json['user'] as Map<String, dynamic>?,
         info = json['user']['user_info'] as Map<String, dynamic>?;

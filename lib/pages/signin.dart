@@ -79,6 +79,7 @@ class _signinState extends State<signin> {
                     children: [
                       TextField(
                         controller: _mailCont,
+                        style: TextStyle(color: Colors.white),
                         onChanged: (value) {
                           setState(() {
                             _err_msg_mail = '';
@@ -89,10 +90,10 @@ class _signinState extends State<signin> {
                             hintText: 'example@gmail.com',
                             hintStyle: TextStyle(
                                 color:
-                                    const Color.fromARGB(143, 255, 255, 255)),
+                                    const Color.fromARGB(255, 253, 247, 247)),
                             labelStyle: TextStyle(
                                 color:
-                                    const Color.fromARGB(255, 236, 226, 248)),
+                                    const Color.fromARGB(255, 229, 213, 248)),
                             errorText:
                                 _err_msg_mail.isEmpty ? null : _err_msg_mail,
                             focusedBorder: OutlineInputBorder(
@@ -206,6 +207,8 @@ class _signinState extends State<signin> {
                                       String token = json['token'];
                                       authenticator.store_teken(token);
                                       api_processes.api_set_user_data(token);
+                                      final vlg =
+                                          api_processes.api_load_vlogs(token);
                                       authenticator.login(context);
                                       break;
                                     case 401:
